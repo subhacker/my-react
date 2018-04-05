@@ -1,0 +1,37 @@
+#manage-news{
+    margin-left: 40px;
+    margin-top: 20px;
+}
+
+#manage-news button{
+    margin-left: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+#manage-news tr{
+    height: 10px;
+}
+.index{
+    width: 40px;
+}
+.title{
+    width: 200px;
+    height: 20px;
+    overflow: hidden;
+}
+.module{
+    width: 40px;
+}
+.author{
+    width: 40px;
+}
+.time{
+    width: 40px;
+}
+.times{
+    width: 60px;
+}
+.operate{
+    width: 60px;
+}

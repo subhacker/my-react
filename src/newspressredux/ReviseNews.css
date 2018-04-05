@@ -1,0 +1,13 @@
+
+
+.err-message{
+    font-size:80%;
+    color: red;
+}
+
+.requireDot{
+    color: red;
+    font-size: 70%;
+    margin-left: 5px;
+    vertical-align: top;
+}

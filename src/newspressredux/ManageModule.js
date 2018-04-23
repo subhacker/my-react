@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './ManageModule.css'
 import {connect} from 'react-redux'
+import {fetchModuleList,updateModuleList} from './reducer/modulereducer'
 class ManageModule extends Component{
     constructor(props){
         super(props)
@@ -14,12 +15,31 @@ class ManageModule extends Component{
         }
     }
 
+    componentWillMount(){
+        console.log('huidaohhhgggggggggggggggg')
+        const {getModuleList} =this.props;
+        getModuleList();
+
+    }
+
+    componentDidMount(){
+        console.log('生命周期回调')
+        const {getModuleList} =this.props;
+        getModuleList();
+
+    }
+
+
+
+
+
     onRevise(ev){
         let job=ev.target.dataset.job;
         console.log(this.props)
 
         if(job=='revise'){
             const {onModuleFreeze,onModuleReviseaa,onModuleDelete}=this.props;
+            const {onModuleListUpdate}=this.props;
             let {moduleInfo}=this.props;
             let reviseId=ev.target.parentElement.id;
             let index;
@@ -34,9 +54,9 @@ class ManageModule extends Component{
             let reviseIndex=moduleInfo[index].moduleIndex;
             let reviseModuleId=moduleInfo[index].moduleId;
             this.setState({
-                reviseId:reviseId,
-                reviseIndex:reviseIndex,
-                reviseName:reviseName
+                reviseModuleId:reviseId,
+                newModuleIndex:reviseIndex,
+                newModuleName:reviseName
             })
                ev.target.innerHTML='保存'
 
@@ -49,10 +69,8 @@ class ManageModule extends Component{
                 ev.target.innerHTML='修改';
                 this.setState({
                     reviseId:null
-                })
-                onModuleReviseaa(reviseObj)
+                });
             }
-
         }
 
         if(job=='delete'){
@@ -177,6 +195,14 @@ const mapDisPatchToProps=dispatch=>{
                 type:'DELETE_MODULE',
                 info:deleteIndex
             })
+        },
+        onModuleListUpdate:(data)=>{
+            dispatch(updateModuleList(data))
+
+        },
+        getModuleList:()=>{
+            console.log('getModuleslit mangge')
+            dispatch(fetchModuleList())
         }
 
     }

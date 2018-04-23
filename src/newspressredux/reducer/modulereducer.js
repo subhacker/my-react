@@ -57,9 +57,19 @@ function moduleReducer(state={},action){
 }
 export default moduleReducer;
 
+export function updateModuleList(data) {
+    return dispatch=>{
+        return fetch('/news-ajax/api/revise-module.php',data)
+            .then(response=>dispatch(fetchModuleList()))
+    }
+
+}
+
 
  export function fetchModuleList() {
     return dispatch => {
+
+        console.log('fetch moduleList')
         return fetch('/news-ajax/api/get-module-list-react.php')
             .then(response => response.json())
             .then(json => dispatch(receiveModuleList(json)))

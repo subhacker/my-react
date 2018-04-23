@@ -28,7 +28,9 @@ class AddModule extends Component{
 
     componentDidMount(){
         const {getModuleList} =this.props
+        console.log('shenghuidoakkkkkkkkkkkkkkkkkkkkkkkkk')
         getModuleList();
+
 
     }
 
@@ -52,11 +54,11 @@ class AddModule extends Component{
             moduleIndex:ev.target.value
         })
     }
+
     /**
      * 表单提交时候的处理
      * @param ev
      */
-
     onSubmit(ev){
         ev.preventDefault();
         let {moduleInfo}=this.props;
@@ -113,36 +115,22 @@ class AddModule extends Component{
                 hasRepeatIndex
             },
             ()=>{
-                console.log('回调函数中的state');
-                console.log(this.state);
                 if(!(this.state.hasRepeatName||this.state.hasRepeatIndex||this.state.dummyIndexValue||this.state.dummyNameValue)){
                     let newModuleInfo={
                         moduleName:moduleName.value,
                         moduleIndex:moduleIndex.value
                     };
-
                     $.post('/news-ajax/api/add-module.php', newModuleInfo)
                         .done(function (data) {
                             console.log(data);
                             let info=JSON.parse(data);
                             if(info.hasInto){
-
                                 getModuleList();
                                 this.setState({
                                     showAddNextPage:true
                                 })
-
-
                             }
-
                         }.bind(this))
-
-
-
-
-
-
-
                 }
             }
         )

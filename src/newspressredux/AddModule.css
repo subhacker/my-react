@@ -1,0 +1,40 @@
+
+#add-module{
+    margin-left: 135px;
+
+}
+.form-control,input{
+    width: 300px;
+
+}
+
+input{
+    margin: 0px;
+}
+
+#add-module-button{
+    margin-left: 120px;
+    margin-top: 22px;
+}
+
+
+
+.err-message{
+    font-size:80%;
+    color: red;
+}
+
+.moduleTip{
+    font-size: 120%;
+    font-weight: 700;
+}
+
+#inputInfo .row{
+    margin-top: 20px;
+}
+
+#add-module-button-next{
+    margin-top: 20px;
+    margin-left: 100px;
+
+}

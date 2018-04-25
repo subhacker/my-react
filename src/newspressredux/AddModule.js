@@ -147,11 +147,31 @@ class AddModule extends Component{
             dummyIndexValue:false
         })
     }
+    onFetch(){
+
+        let data={
+            name:'hans',
+            age:45
+        };
+        let formData = new FormData();
+
+        formData.append('name', 'kong');
+
+        formData.append('age', '18');
+
+
+
+        fetch('/news-ajax/api/test-point.php',{method: 'POST', body: formData})
+            .then(response=>{console.log('Fetch成功');console.log(response);return response.json()})
+            .then(json=>console.log(json))
+            .catch(err=>console.log('Fetch失败'))
+    }
 
     render(){
         return(
             <div id='add-module'>
             <div style={{display:this.state.showAddNextPage? 'none':'block'}}>
+                <button onClick={this.onFetch}>获取数据</button>
                 <h3>添加模块</h3>
             <form id='form'>
                 <div className="form-group">

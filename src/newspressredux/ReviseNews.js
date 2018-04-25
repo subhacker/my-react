@@ -119,7 +119,6 @@ class ReviseNews extends Component{
                     console.log('修改成功')
                         onJumpToManageNews('/manage-news')
                     })
-
             }
         });
 

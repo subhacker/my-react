@@ -3,11 +3,18 @@ import './ManageNews.css'
 import {push } from 'react-router-redux';
 import {connect} from 'react-redux'
 
+import {getNewsList,deleteNews} from './reducer/newsreducer'
+
 class ManageNews extends Component{
     constructor(props){
         super(props);
         this.onButton=this.onButton.bind(this);
         this.handleOperate=this.handleOperate.bind(this);
+    }
+
+    componentDidMount(){
+        const {onGetNewsList}=this.props;
+        onGetNewsList();
     }
 
     onButton(ev){
@@ -28,6 +35,7 @@ class ManageNews extends Component{
 
     render(){
         let {data,header}=this.props;
+        data=data||[];
         return(
             <div id='manage-news'>
                 <table className='table'>
@@ -45,14 +53,16 @@ class ManageNews extends Component{
                     <tbody>
                     {
                         data.map(function (item,index) {
+                            console.log('render 中的data数据');
+                            console.log(data)
                             return(
                                 <tr key={index}>
                                     <td className='index'>{index}</td>
                                     <td className='title'><span>{item.title}</span></td>
-                                    <td className='module'>{item.module}</td>
-                                    <td className='author'>{item.author}</td>
-                                    <td className='time'>{item.time}</td>
-                                    <td className='times'>{item.visitTime}</td>
+                                    <td className='module'>{item.newsModule}</td>
+                                    <td className='author'>{item.adder}</td>
+                                    <td className='time'>{item.addTime}</td>
+                                    <td className='times'>{item.visitTimes}</td>
                                     <td className='operate' data-newsid={item.newsId} onClick={this.handleOperate}>
                                         <button data-identify="revise" className='btn btn-default btn-sm'>修改</button>
                                         <button data-identify='delete' className='btn btn-default btn-sm'>删除</button>
@@ -62,7 +72,6 @@ class ManageNews extends Component{
 
                         }.bind(this))
                     }
-
                     </tbody>
                 </table>
             </div>
@@ -83,14 +92,14 @@ const mapStateToProps=state=>{
 const mapDispatchToProps=dispatch=>{
     return{
         onNewsDelete:(deleteNewsId)=>{
-            dispatch({
-                type:"DELETE_NEWS",
-                info:deleteNewsId
-            })
+           dispatch(deleteNews(deleteNewsId))
         },
         onNewsRevise:(path)=>{
             dispatch(push(path))
 
+        },
+        onGetNewsList:()=>{
+            dispatch(getNewsList())
         }
 
     }

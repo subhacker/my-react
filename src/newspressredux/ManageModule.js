@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './ManageModule.css'
 import {connect} from 'react-redux'
-import {fetchModuleList,updateModuleList} from './reducer/modulereducer'
+import {fetchModuleList,updateModuleList,deleteModuleList} from './reducer/modulereducer'
 class ManageModule extends Component{
     constructor(props){
         super(props)
@@ -15,12 +15,6 @@ class ManageModule extends Component{
         }
     }
 
-    componentWillMount(){
-        console.log('huidaohhhgggggggggggggggg')
-        const {getModuleList} =this.props;
-        getModuleList();
-
-    }
 
     componentDidMount(){
         console.log('生命周期回调')
@@ -28,10 +22,6 @@ class ManageModule extends Component{
         getModuleList();
 
     }
-
-
-
-
 
     onRevise(ev){
         let job=ev.target.dataset.job;
@@ -54,18 +44,20 @@ class ManageModule extends Component{
             let reviseIndex=moduleInfo[index].moduleIndex;
             let reviseModuleId=moduleInfo[index].moduleId;
             this.setState({
-                reviseModuleId:reviseId,
-                newModuleIndex:reviseIndex,
-                newModuleName:reviseName
+                reviseId:reviseId,
+                reviseIndex:reviseIndex,
+                reviseName:reviseName
             })
                ev.target.innerHTML='保存'
 
             }else{
                 let reviseObj={
-                    index:index,
-                    reviseName:this.state.reviseName,
-                    reviseIndex:this.state.reviseIndex
+                    reviseModuleId:reviseId,
+                    newModuleName:this.state.reviseName,
+                    newModuleIndex:this.state.reviseIndex
                 }
+                const{onModuleListUpdate}=this.props;
+                onModuleListUpdate(reviseObj)
                 ev.target.innerHTML='修改';
                 this.setState({
                     reviseId:null
@@ -85,7 +77,10 @@ class ManageModule extends Component{
                 }
             }
             console.log(deleteIndex);
-            onModuleDelete(deleteIndex)
+
+            const{onDeleteModuleList}=this.props;
+            onDeleteModuleList({deleteId:reviseId});
+           // onModuleDelete(deleteIndex)
         }
 
         if(job=='freeze'){
@@ -116,6 +111,7 @@ class ManageModule extends Component{
 
     render(){
         let {moduleInfo}=this.props;
+        moduleInfo=moduleInfo||[];
         return(
             <div id='manage-module'>
                 <h3>管理界面</h3>
@@ -174,7 +170,7 @@ class ManageModule extends Component{
 }
 
 const mapStateToProps=state=>{
-    console.log('manageModulezhongdestate');
+    console.log('ManageModule中的State的初始值');
     console.log(state)
     return{
         moduleInfo:state.moduleReducer.moduleInfo
@@ -203,6 +199,9 @@ const mapDisPatchToProps=dispatch=>{
         getModuleList:()=>{
             console.log('getModuleslit mangge')
             dispatch(fetchModuleList())
+        },
+        onDeleteModuleList:(data)=>{
+            dispatch(deleteModuleList(data))
         }
 
     }

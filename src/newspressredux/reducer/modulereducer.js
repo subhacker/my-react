@@ -1,7 +1,7 @@
 
 function moduleReducer(state={},action){
     console.log('state的最初的状态')
-    console.log(state)
+    console.log(state);
 
     if(action.type==='ADD_NEW_MODULE'){
         console.log('正在进行moduleReducer更新ADD_NEW_MODULE')
@@ -59,7 +59,18 @@ export default moduleReducer;
 
 export function updateModuleList(data) {
     return dispatch=>{
-        return fetch('/news-ajax/api/revise-module.php',data)
+        console.log('进行Modulelist的更新')
+        console.log(data)
+        return $.get('/news-ajax/api/revise-module.php',data)
+            .then(response=>dispatch(fetchModuleList()))
+    }
+
+}
+
+export function deleteModuleList(data) {
+    return(dispatch)=>{
+        console.log('进行ModuleList的删除');
+        return $.get('/news-ajax/api/delete-module.php',data)
             .then(response=>dispatch(fetchModuleList()))
     }
 

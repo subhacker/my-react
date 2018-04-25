@@ -3,27 +3,19 @@ import './ReviseNews.css'
 import {connect} from 'react-redux'
 
 import {push } from 'react-router-redux';
+
+import {fetchModuleList} from './reducer/modulereducer'
 class ReviseNews extends Component{
     constructor(props){
         super(props);
-        const {newsId,data}=this.props;
-        let newsIndex;
-        let filterNews=data.filter(function (item,index,arr) {
-            if( item.newsId==newsId){
-                newsIndex=index;
-                console.log(newsIndex)
-                return true
-            }
-        });
 
-        let newsTitle=filterNews[0].title;
-        let newsContent=filterNews[0].newsContent;
-        let newsOption=filterNews[0].module
+
+
         this.state={
-            newsIndex:newsIndex,
-            newsTitle:newsTitle,
-            contentValue:newsContent,
-            selectedOption:newsOption,
+            newsIndex:'',
+            newsTitle:'',
+            contentValue:'',
+            selectedOption:'',
             dummyTitleValue:false,
             dummyOptionValue:false,
             dummyContentValue:false
@@ -32,6 +24,31 @@ class ReviseNews extends Component{
         this.onOptionSelect=this.onOptionSelect.bind(this);
         this.onNewsContentInput=this.onNewsContentInput.bind(this);
         this.onSubmit=this.onSubmit.bind(this);
+    }
+
+    componentDidMount(){
+        const {onFetchModuleList}=this.props;
+        onFetchModuleList();
+
+        const {newsId}=this.props
+        let data={
+            newsId:newsId
+        };
+
+        $.get('/news-ajax/api/get-news-item.php',data)
+            .then((response)=>{
+            let data=JSON.parse(response);
+            console.log('获取数据项');
+            console.log(data)
+            this.setState({
+                newsIndex:data.newsIndex,
+                newsTitle:data.newsTitle,
+                contentValue:data.newsContent,
+                selectedOption:data.newsOption,
+
+            })
+
+            })
     }
 
     onNewsTitleInput(ev){
@@ -89,13 +106,20 @@ class ReviseNews extends Component{
             if(!(this.state.dummyContentValue||this.state.dummyOptionValue||this.state.dummyTitleValue)){
                 const {onNewsRevise,newsId}=this.props;
                 let newsObj={
-                    newsIndex:this.state.newsIndex,
                     title:newsTitle.value,
-                    module:newsOption.value,
-                    newsContent:newsContent.value,
-                    newsId:newsId
+                    option:newsOption.value,
+                    content:newsContent.value,
+                    id:newsId
                 };
-                onNewsRevise(newsObj);
+
+                const {onJumpToManageNews}=this.props;
+
+                $.post('/news-ajax/api/revise-news-item.php',newsObj)
+                    .then((response)=>{
+                    console.log('修改成功')
+                        onJumpToManageNews('/manage-news')
+                    })
+
             }
         });
 
@@ -103,6 +127,7 @@ class ReviseNews extends Component{
 
     render(){
         let {moduleInfo}=this.props;
+        moduleInfo=moduleInfo||[];
         return(
             <div>
                 <div style={{display:this.state.showAddNextPage? 'none':'block'}}>
@@ -160,7 +185,7 @@ class ReviseNews extends Component{
 const mapStateToProps=state=>{
     let path=state.routerReducer.location.pathname;
     let pathArr=path.split('/');
-    let newsId=pathArr[pathArr.length-1]
+    let newsId=pathArr[pathArr.length-1];
     return{
         newsId:parseInt(newsId),
         data:state.newsReducer.newsData,
@@ -176,7 +201,14 @@ const mapDisPatchToProps=dispatch=>{
                 info:reviseNewsObj
             });
             dispatch(push('/manage-news'))
-        }
+        },
+        onFetchModuleList:()=>{
+
+            dispatch(fetchModuleList())
+        },
+        onJumpToManageNews:(path)=>{
+            dispatch(push(path))
+    }
 
     }
 };

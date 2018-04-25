@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import './AddNews.css'
 import {connect} from 'react-redux'
+
+import {getNewsList} from './reducer/newsreducer'
+import {fetchModuleList} from './reducer/modulereducer'
 class AddNews extends Component{
     constructor(props){
         super(props)
@@ -8,7 +11,7 @@ class AddNews extends Component{
             showAddNextPage:false,
             newsTitle:'',
             contentValue:'',
-            selectedOption:'',
+            selectedOption:'none',
             dummyTitleValue:false,
             dummyOptionValue:false,
             dummyContentValue:false
@@ -37,6 +40,14 @@ class AddNews extends Component{
         this.setState({
             contentValue:ev.target.value
         })
+    }
+
+    componentDidMount(){
+        console.log('AddNews生命周期回调')
+        const {onGetNewsList}=this.props;
+        onGetNewsList();
+        const {onGetModuleList}=this.props;
+        onGetModuleList();
     }
 
     onSubmit(ev) {
@@ -85,20 +96,21 @@ class AddNews extends Component{
                 if(!(this.state.dummyContentValue||this.state.dummyOptionValue||this.state.dummyTitleValue)){
                     let newsObj={
                         newsId:Date.now(),
-                        title:newsTitle.value,
-                        module:newsOption.value,
+                        newsTitle:newsTitle.value,
+                        newsModule:newsOption.value,
                         newsContent:newsContent.value,
                         author:'hans',
                         time:'2018-2-23 12:43:45',
                         visitTime:43,
-                    }
+                    };
 
-                    let {onAddNewNews}=this.props;
-                    onAddNewNews(newsObj)
+                    $.post('/news-ajax/api/add-news.php',newsObj)
+                        .then(response=>{
+                            this.setState({
+                                showAddNextPage:true
+                            })
 
-                    this.setState({
-                        showAddNextPage:true
-                    })
+                        })
                 }
             }
             )
@@ -118,6 +130,7 @@ class AddNews extends Component{
 
     render(){
         let {moduleInfo}=this.props;
+        moduleInfo=moduleInfo||[];
         return(
             <div id='add-news'>
             <div style={{display:this.state.showAddNextPage? 'none':'block'}}>
@@ -192,7 +205,14 @@ const mapDispatchToProps=dispatch=>{
                 type:"ADD_NEWS",
                 info:newsInfo
             })
+        },
+        onGetNewsList:()=>{
+            dispatch(getNewsList())
+        },
+        onGetModuleList:()=>{
+            dispatch(fetchModuleList())
         }
+
 
     }
 }

@@ -1,14 +1,4 @@
-let newsData=[
-    {
-        newsId:123,
-        title:'react入门',
-        module:'react',
-        author:'hans',
-        time:'2018-2-23 12:43:45',
-        visitTime:43,
-        newsContent:'React Redux Router'
-    }
-];
+
 
 let header=[
     {
@@ -42,7 +32,7 @@ let header=[
     }
 ];
 
-function newsReducer(state={newsData,header},action){
+function newsReducer(state={newsData:[],header},action){
     if(action.type==='ADD_NEWS'){
         let newsList=state.newsData.slice();
         let obj={
@@ -71,6 +61,19 @@ function newsReducer(state={newsData,header},action){
        let deleteReturnState= Object.assign({},state,{newsData:deleteNewsList})
         return deleteReturnState ;
     }
+
+    if(action.type==='FILL_NEWS_LIST'){
+       let data={
+            ...state,
+            newsData:action.data
+        }
+        console.log('获取数据后的')
+        console.log(data)
+
+        return data;
+
+
+    }
     if(action.type==='REVISE_NEWS'){
 
         let newsObj=action.info;
@@ -97,3 +100,42 @@ function newsReducer(state={newsData,header},action){
     return state
 }
 export default newsReducer;
+
+
+export function getNewsList() {
+    return(dispatch)=>{
+        console.log('获取NewsList数据')
+        let data={
+            filter:'all',
+            startNews:0,
+            requiredNewsNum:20
+        };
+        return $.get('/news-ajax/api/get-news-list.php',data)
+            .then(response=>{
+                let data=JSON.parse(response)
+                console.log(data['news_arr'])
+                dispatch({
+                    type:"FILL_NEWS_LIST",
+                    data:data['news_arr']
+                })
+            })
+
+    }
+
+}
+
+export function deleteNews(newsId) {
+    return (dispatch)=>{
+    console.log('进行NewsList的删除');
+    let data={
+        deleteNodeId:newsId
+    }
+    return $.get('/news-ajax/api/delete-news.php',data)
+        .then(response=>{
+            console.log('删除陈宫');
+            dispatch(getNewsList())
+        })
+
+    }
+
+}

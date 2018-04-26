@@ -53,8 +53,6 @@ class ManageNews extends Component{
                     <tbody>
                     {
                         data.map(function (item,index) {
-                            console.log('render 中的data数据');
-                            console.log(data)
                             return(
                                 <tr key={index}>
                                     <td className='index'>{index}</td>
@@ -81,8 +79,6 @@ class ManageNews extends Component{
 
 const mapStateToProps=state=>{
 
-    console.log('传递到组件的state的信息');
-    console.log(state)
     return{
         header:state.newsReducer.header,
         data:state.newsReducer.newsData
@@ -108,5 +104,4 @@ const mapDispatchToProps=dispatch=>{
 
 
 let ConnectManageNews=connect(mapStateToProps,mapDispatchToProps)(ManageNews);
-
 export default ConnectManageNews

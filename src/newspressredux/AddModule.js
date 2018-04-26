@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import './AddModule.css'
-import axios from 'axios';
-//require('es6-promise').polyfill();
-//require('isomorphic-fetch');
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 
 import {fetchModuleList} from './reducer/modulereducer'
 
@@ -23,21 +22,13 @@ class AddModule extends Component{
         this.onModuleNameInput=this.onModuleNameInput.bind(this);
         this.onSubmit=this.onSubmit.bind(this);
         this.addNext=this.addNext.bind(this)
-
     }
 
     componentDidMount(){
-        const {getModuleList} =this.props
-        console.log('shenghuidoakkkkkkkkkkkkkkkkkkkkkkkkk')
+        const {getModuleList} =this.props;
         getModuleList();
-
-
     }
 
-    /**
-     * 实现moduleName的输入
-     * @param ev
-     */
     onModuleNameInput(ev){
         let value=ev.target.value;
         this.setState({
@@ -45,24 +36,16 @@ class AddModule extends Component{
         })
     }
 
-    /**
-     * 实现moduleIndex的输入
-     * @param ev
-     */
     onModuleIndexInput(ev){
         this.setState({
             moduleIndex:ev.target.value
         })
     }
 
-    /**
-     * 表单提交时候的处理
-     * @param ev
-     */
     onSubmit(ev){
         ev.preventDefault();
         let {moduleInfo}=this.props;
-        let moduleName=document.getElementById('moduleName');
+        //let moduleName=document.getElementById('moduleName');
 
         let dummyNameValue=false;
         let hasRepeatName=false;
@@ -70,34 +53,34 @@ class AddModule extends Component{
         let hasRepeatIndex=false;
         const {getModuleList} =this.props
 
-        if(moduleName.value){
+        if(this.state.moduleName){
             dummyNameValue=false;
             let RepeatNameItem=moduleInfo.some(function (item,index,arr) {
-                if(item.moduleName==moduleName.value){
+                if(item.moduleName==this.state.moduleName){
                     return true
                 }else {
                     return false
                 }
-            });
+            }.bind(this));
             if(RepeatNameItem){
                     hasRepeatName=true
             }else{
                     hasRepeatName=false
             }
         }else{
-                dummyNameValue=true
+            dummyNameValue=true
         }
 
-        let moduleIndex=document.getElementById('moduleIndex')
-        if(moduleIndex.value){
-            dummyIndexValue=false
-            let RepeatIndexItem=moduleInfo.some(function (item,index,arr) {
-                if(item.moduleIndex==moduleIndex.value){
+        //let moduleIndex=document.getElementById('moduleIndex')
+        if(this.state.moduleIndex){
+            dummyIndexValue=false;
+            let RepeatIndexItem=moduleInfo.some((item,index,arr)=>{
+                if(item.moduleIndex==this.state.moduleIndex){
                     return true
                 }else {
                     return false
                 }
-            })
+            });
            if(RepeatIndexItem){
                     hasRepeatIndex=true
             }else{
@@ -117,20 +100,27 @@ class AddModule extends Component{
             ()=>{
                 if(!(this.state.hasRepeatName||this.state.hasRepeatIndex||this.state.dummyIndexValue||this.state.dummyNameValue)){
                     let newModuleInfo={
-                        moduleName:moduleName.value,
-                        moduleIndex:moduleIndex.value
+                        moduleName:this.state.value,
+                        moduleIndex:this.state.value
                     };
-                    $.post('/news-ajax/api/add-module.php', newModuleInfo)
-                        .done(function (data) {
-                            console.log(data);
-                            let info=JSON.parse(data);
-                            if(info.hasInto){
+                    let postData=new FormData();
+                    postData.append('moduleName',this.state.moduleName);
+                    postData.append('moduleIndex',this.state.moduleIndex);
+                    fetch('/news-ajax/api/add-module.php',
+                        {
+                        method:"POST",
+                        body:postData
+                        })
+                        .then(response=>response.json())
+                        .then(data=>{
+                            if(data['hasInto']){
                                 getModuleList();
                                 this.setState({
                                     showAddNextPage:true
                                 })
+
                             }
-                        }.bind(this))
+                        })
                 }
             }
         )
@@ -147,47 +137,27 @@ class AddModule extends Component{
             dummyIndexValue:false
         })
     }
-    onFetch(){
-
-        let data={
-            name:'hans',
-            age:45
-        };
-        let formData = new FormData();
-
-        formData.append('name', 'kong');
-
-        formData.append('age', '18');
-
-
-
-        fetch('/news-ajax/api/test-point.php',{method: 'POST', body: formData})
-            .then(response=>{console.log('Fetch成功');console.log(response);return response.json()})
-            .then(json=>console.log(json))
-            .catch(err=>console.log('Fetch失败'))
-    }
 
     render(){
         return(
             <div id='add-module'>
-            <div style={{display:this.state.showAddNextPage? 'none':'block'}}>
-                <button onClick={this.onFetch}>获取数据</button>
-                <h3>添加模块</h3>
-            <form id='form'>
-                <div className="form-group">
-                    <label htmlFor="moduleName">模块名称</label>
-                    <input onChange={this.onModuleNameInput}  type='text' className="form-control input-sm" id="moduleName" value={this.state.moduleName}  />
-                    <span style={{display:this.state.hasRepeatName?'inline':'none'}} className='err-message'>模块名称已经存在</span>
-                    <span style={{display:this.state.dummyNameValue?'inline':'none'}} className='err-message'>模块名称不得为空</span>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="moduleIndex">模块序号</label>
-                    <input onChange={this.onModuleIndexInput} type='number'  className="form-control input-sm" id="moduleIndex" value={this.state.moduleIndex}  />
-                    <span id='hasRepeatIndexErr' style={{display:this.state.hasRepeatIndex?'inline':'none'}} className='err-message'>该序号已经存在</span>
-                    <span style={{display:this.state.dummyIndexValue?'inline':'none'}} className='err-message'>序号不得为空</span>
-                </div>
-                <button id='add-module-button' onClick={this.onSubmit}  type="submit" className="btn btn-default">添加</button>
-            </form>
+                <div style={{display:this.state.showAddNextPage? 'none':'block'}}>
+                <h3>添加新模块</h3>
+                <form id='form'>
+                    <div className="form-group">
+                        <label htmlFor="moduleName">模块名称:</label>
+                        <input onChange={this.onModuleNameInput}  type='text' className="form-control input-sm" id="moduleName" value={this.state.moduleName}  />
+                        <span style={{display:this.state.hasRepeatName?'inline':'none'}} className='err-message'>模块名称已经存在</span>
+                        <span style={{display:this.state.dummyNameValue?'inline':'none'}} className='err-message'>模块名称不得为空</span>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="moduleIndex">模块序号:</label>
+                        <input onChange={this.onModuleIndexInput} type='number'  className="form-control input-sm" id="moduleIndex" value={this.state.moduleIndex}  />
+                        <span id='hasRepeatIndexErr' style={{display:this.state.hasRepeatIndex?'inline':'none'}} className='err-message'>该序号已经存在</span>
+                        <span style={{display:this.state.dummyIndexValue?'inline':'none'}} className='err-message'>序号不得为空</span>
+                    </div>
+                    <button id='add-module-button' onClick={this.onSubmit}  type="submit" className="btn btn-primary">添加</button>
+                </form>
 
             </div>
                 <div id='inputInfo' style={{display:this.state.showAddNextPage? 'block':'none'}} className='container'>

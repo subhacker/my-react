@@ -15,9 +15,7 @@ class ManageModule extends Component{
         }
     }
 
-
     componentDidMount(){
-        console.log('生命周期回调')
         const {getModuleList} =this.props;
         getModuleList();
 
@@ -25,15 +23,10 @@ class ManageModule extends Component{
 
     onRevise(ev){
         let job=ev.target.dataset.job;
-        console.log(this.props)
-
         if(job=='revise'){
-            const {onModuleFreeze,onModuleReviseaa,onModuleDelete}=this.props;
-            const {onModuleListUpdate}=this.props;
             let {moduleInfo}=this.props;
             let reviseId=ev.target.parentElement.id;
             let index;
-
             for(index=0;index<moduleInfo.length;index++){
                 if(moduleInfo[index].moduleId==reviseId){
                     break;
@@ -66,8 +59,7 @@ class ManageModule extends Component{
         }
 
         if(job=='delete'){
-            console.log('delete in ')
-            const {onModuleDelete}=this.props;
+
             let {moduleInfo}=this.props;
             let reviseId=ev.target.parentElement.id;
             let deleteIndex;
@@ -76,15 +68,12 @@ class ManageModule extends Component{
                     break;
                 }
             }
-            console.log(deleteIndex);
-
             const{onDeleteModuleList}=this.props;
             onDeleteModuleList({deleteId:reviseId});
-           // onModuleDelete(deleteIndex)
+
         }
 
         if(job=='freeze'){
-            console.log('暂时未添加')
             /**
              * 添加freeze需要指定新的字段，同时的需要的解禁用的操作，
              * block字段，禁用之后的逻辑？添加新闻的时候，模块的选择中并无该禁用字段
@@ -94,8 +83,6 @@ class ManageModule extends Component{
         }
 
     }
-
-
 
     onRenderNameChange(ev){
         this.setState({
@@ -170,8 +157,6 @@ class ManageModule extends Component{
 }
 
 const mapStateToProps=state=>{
-    console.log('ManageModule中的State的初始值');
-    console.log(state)
     return{
         moduleInfo:state.moduleReducer.moduleInfo
     }
@@ -197,7 +182,6 @@ const mapDisPatchToProps=dispatch=>{
 
         },
         getModuleList:()=>{
-            console.log('getModuleslit mangge')
             dispatch(fetchModuleList())
         },
         onDeleteModuleList:(data)=>{

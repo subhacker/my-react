@@ -1,16 +1,12 @@
 import React, { Component } from 'react'
 import './ReviseNews.css'
 import {connect} from 'react-redux'
-
 import {push } from 'react-router-redux';
 
 import {fetchModuleList} from './reducer/modulereducer'
 class ReviseNews extends Component{
     constructor(props){
         super(props);
-
-
-
         this.state={
             newsIndex:'',
             newsTitle:'',
@@ -29,26 +25,28 @@ class ReviseNews extends Component{
     componentDidMount(){
         const {onFetchModuleList}=this.props;
         onFetchModuleList();
-
         const {newsId}=this.props
         let data={
             newsId:newsId
         };
 
-        $.get('/news-ajax/api/get-news-item.php',data)
-            .then((response)=>{
-            let data=JSON.parse(response);
-            console.log('获取数据项');
-            console.log(data)
-            this.setState({
-                newsIndex:data.newsIndex,
-                newsTitle:data.newsTitle,
-                contentValue:data.newsContent,
-                selectedOption:data.newsOption,
+        let queryStr="?newsId="+newsId;
 
-            })
 
-            })
+        /**
+         * 可以的将在跳转的时候，数据由manage-news页面直接传入，这样会更加加快渲染的过程
+         */
+
+        fetch('/news-ajax/api/get-news-item.php'+queryStr, {method:"GET"})
+            .then(response=>response.json())
+            .then(data=>{
+                this.setState({
+                    newsIndex:data.newsIndex,
+                    newsTitle:data.newsTitle,
+                    contentValue:data.newsContent,
+                    selectedOption:data.newsOption,
+                })
+            });
     }
 
     onNewsTitleInput(ev){
@@ -74,25 +72,22 @@ class ReviseNews extends Component{
     }
     onSubmit(ev) {
         ev.preventDefault();
-        let newsTitle=document.getElementById('newsTitle');
-        let newsOption=document.getElementById('newsOption');
-        let newsContent=document.getElementById('newsContent');
         let dummyTitleValue=false;
         let dummyOptionValue=false;
         let dummyContentValue=false;
 
-        if(newsTitle.value){
+        if(this.state.newsTitle){
                 dummyTitleValue=false
         }else{
                 dummyTitleValue=true
         }
 
-        if(newsOption.value!=='none'){
+        if(this.state.selectedOption!='none'){
                 dummyOptionValue=false
         }else{
                 dummyOptionValue=true
         }
-        if(newsContent.value){
+        if(this.state.contentValue){
                 dummyContentValue=false
         }else{
                 dummyContentValue=true
@@ -104,21 +99,17 @@ class ReviseNews extends Component{
             dummyContentValue
         },()=>{
             if(!(this.state.dummyContentValue||this.state.dummyOptionValue||this.state.dummyTitleValue)){
-                const {onNewsRevise,newsId}=this.props;
-                let newsObj={
-                    title:newsTitle.value,
-                    option:newsOption.value,
-                    content:newsContent.value,
-                    id:newsId
-                };
-
+                const {newsId}=this.props;
+                let postData=new FormData();
+                postData.append('title',this.state.newsTitle);
+                postData.append('option',this.state.selectedOption);
+                postData.append('content',this.state.contentValue);
+                postData.append('id',newsId);
                 const {onJumpToManageNews}=this.props;
-
-                $.post('/news-ajax/api/revise-news-item.php',newsObj)
-                    .then((response)=>{
-                    console.log('修改成功')
-                        onJumpToManageNews('/manage-news')
-                    })
+                fetch('/news-ajax/api/revise-news-item.php',{
+                    method:'POST',
+                    body:postData
+                }).then(response=>onJumpToManageNews('/manage-news'))
             }
         });
 
@@ -202,7 +193,6 @@ const mapDisPatchToProps=dispatch=>{
             dispatch(push('/manage-news'))
         },
         onFetchModuleList:()=>{
-
             dispatch(fetchModuleList())
         },
         onJumpToManageNews:(path)=>{
@@ -213,5 +203,4 @@ const mapDisPatchToProps=dispatch=>{
 };
 
 let ConnectReviseNews=connect(mapStateToProps,mapDisPatchToProps)(ReviseNews);
-
 export default ConnectReviseNews;

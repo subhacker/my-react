@@ -67,8 +67,6 @@ function newsReducer(state={newsData:[],header},action){
             ...state,
             newsData:action.data
         }
-        console.log('获取数据后的')
-        console.log(data)
 
         return data;
 
@@ -104,7 +102,6 @@ export default newsReducer;
 
 export function getNewsList() {
     return(dispatch)=>{
-        console.log('获取NewsList数据')
         let data={
             filter:'all',
             startNews:0,
@@ -126,13 +123,11 @@ export function getNewsList() {
 
 export function deleteNews(newsId) {
     return (dispatch)=>{
-    console.log('进行NewsList的删除');
     let data={
         deleteNodeId:newsId
     }
     return $.get('/news-ajax/api/delete-news.php',data)
         .then(response=>{
-            console.log('删除陈宫');
             dispatch(getNewsList())
         })
 

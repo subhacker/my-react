@@ -1,10 +1,8 @@
 
 function moduleReducer(state={},action){
-    console.log('state的最初的状态')
-    console.log(state);
 
     if(action.type==='ADD_NEW_MODULE'){
-        console.log('正在进行moduleReducer更新ADD_NEW_MODULE')
+
         let newModuleList=state.moduleInfo.slice();
         let obj={
             moduleIndex:action.info.index,
@@ -18,7 +16,6 @@ function moduleReducer(state={},action){
     }
 
     if(action.type==='REVISE_MODULE'){
-        console.log('revise_module更新')
         let newModuleName=action.info.reviseName;
         let index=action.info.index;
         let newModuleIndex=action.info.reviseIndex;
@@ -36,7 +33,6 @@ function moduleReducer(state={},action){
     }
 
     if(action.type==='DELETE_MODULE'){
-        console.log('dleteModule更新')
         let index=action.info;
         let newModuleList=state.moduleInfo.slice();
         newModuleList.splice(index,1);
@@ -59,8 +55,6 @@ export default moduleReducer;
 
 export function updateModuleList(data) {
     return dispatch=>{
-        console.log('进行Modulelist的更新')
-        console.log(data)
         return $.get('/news-ajax/api/revise-module.php',data)
             .then(response=>dispatch(fetchModuleList()))
     }
@@ -69,7 +63,6 @@ export function updateModuleList(data) {
 
 export function deleteModuleList(data) {
     return(dispatch)=>{
-        console.log('进行ModuleList的删除');
         return $.get('/news-ajax/api/delete-module.php',data)
             .then(response=>dispatch(fetchModuleList()))
     }
@@ -79,8 +72,6 @@ export function deleteModuleList(data) {
 
  export function fetchModuleList() {
     return dispatch => {
-
-        console.log('fetch moduleList')
         return fetch('/news-ajax/api/get-module-list-react.php')
             .then(response => response.json())
             .then(json => dispatch(receiveModuleList(json)))
@@ -88,8 +79,6 @@ export function deleteModuleList(data) {
 }
 
 function receiveModuleList(data) {
-    console.log('收到的ModuleList')
-    console.log(data)
     return{
         type:'RECEIVE_MODULE',
         data:data

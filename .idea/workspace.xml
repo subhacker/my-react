@@ -52,8 +52,8 @@
       <file leaf-file-name="newsreducer.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/newspressredux/reducer/newsreducer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="31" column="5" lean-forward="true" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
+            <state relative-caret-position="264">
+              <caret line="29" column="18" lean-forward="true" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -425,12 +425,12 @@
       <workItem from="1524491121436" duration="3480000" />
       <workItem from="1524565314385" duration="12095000" />
       <workItem from="1524661178395" duration="3859000" />
-      <workItem from="1524739917517" duration="5308000" />
+      <workItem from="1524739917517" duration="5377000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="178436000" />
+    <option name="totallyTimeSpent" value="178505000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -811,8 +811,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/newspressredux/reducer/newsreducer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="31" column="5" lean-forward="true" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
+        <state relative-caret-position="264">
+          <caret line="29" column="18" lean-forward="true" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
           <folding />
         </state>
       </provider>

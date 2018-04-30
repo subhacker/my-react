@@ -120,6 +120,7 @@ class ReviseNews extends Component{
         moduleInfo=moduleInfo||[];
         return(
             <div>
+
                 <div style={{display:this.state.showAddNextPage? 'none':'block'}}>
                     <h3>添加模块</h3>
                     <form id='form' className='form-horizontal'>

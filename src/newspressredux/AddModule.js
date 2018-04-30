@@ -8,7 +8,7 @@ import {fetchModuleList} from './reducer/modulereducer'
 
 class AddModule extends Component{
     constructor(props){
-        super(props)
+        super(props);
         this.state={
             showAddNextPage:false,
             moduleName:'',
@@ -141,6 +141,7 @@ class AddModule extends Component{
     render(){
         return(
             <div id='add-module'>
+
                 <div style={{display:this.state.showAddNextPage? 'none':'block'}}>
                 <h3>添加新模块</h3>
                 <form id='form'>
@@ -164,7 +165,7 @@ class AddModule extends Component{
                     <h3>已添加模块信息</h3>
                     <div className='row'>
                         <div className='col-md-2'>
-                            <span className='moduleTip'>模块名称</span>
+                            <span className='moduleTip'>模块名称：</span>
                         </div>
                         <div className='col-md-4'>
                             <span>{this.state.moduleName}</span>
@@ -172,7 +173,7 @@ class AddModule extends Component{
                     </div>
                     <div className='row'>
                         <div className='col-md-2'>
-                            <span className='moduleTip'>模块序号</span>
+                            <span className='moduleTip'>模块序号：</span>
                         </div>
                         <div className='col-md-2'>
                             <span>{this.state.moduleIndex}</span>

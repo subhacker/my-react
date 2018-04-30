@@ -21,7 +21,7 @@ class Home extends Component{
     render(){
         return(
             <div id='add-module'>
-            <h1>主页</h1>
+            <img src="../../img/welcome.gif"/>
             </div>
         )
     }
